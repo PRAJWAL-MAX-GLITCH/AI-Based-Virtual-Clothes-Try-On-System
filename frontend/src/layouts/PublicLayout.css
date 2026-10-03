@@ -1,0 +1,10 @@
+.public-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.public-main {
+  flex: 1;
+  /* margin-top: 72px;  If we want content to not be under the navbar, but we handle it in hero section instead */
+}

@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables
+.env
+.env.local
+
+# Flask
+instance/
+.webassets-cache
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Uploaded files (keep directory structure via .gitkeep)
+uploads/users/*
+uploads/clothing/catalog/*
+uploads/clothing/user/*
+uploads/processed/users/*
+uploads/processed/clothing/*
+uploads/results/*
+!uploads/**/.gitkeep
+
+# Try-on results
+results/
+
+# MediaPipe model files (large binaries, download via script)
+models/*.task
+models/*.tflite
