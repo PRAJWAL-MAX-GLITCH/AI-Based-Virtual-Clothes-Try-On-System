@@ -25,6 +25,8 @@ export default function ProfilePage() {
   const [isDeactivateOpen, setIsDeactivateOpen] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
+  const [previewImage, setPreviewImage] = useState(null)
+  const [imageError, setImageError] = useState(false)
 
   const handleProfileChange = (e) => setProfileData(prev => ({ ...prev, [e.target.name]: e.target.value }))
   const handlePasswordChange = (e) => setPasswordData(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -33,6 +35,11 @@ export default function ProfilePage() {
     const file = e.target.files?.[0]
     if (!file) return
 
+    // Show instant local preview for great UX
+    const previewUrl = URL.createObjectURL(file)
+    setPreviewImage(previewUrl)
+    setImageError(false)
+
     setIsUploading(true)
     const formData = new FormData()
     formData.append('image', file)
@@ -40,7 +47,7 @@ export default function ProfilePage() {
     try {
       // 1. Upload the image to get the file path
       const res = await uploadUserImage(formData)
-      const imagePath = res.data.file_path || res.data.filename
+      const imagePath = res.data.path || res.data.file_path || (res.data.filename ? `users/${res.data.filename}` : '')
       
       // 2. Immediately update the profile with the new image path
       const updatedProfile = await updateUserProfile({ ...profileData, profile_image_path: imagePath })
@@ -50,8 +57,10 @@ export default function ProfilePage() {
       showToast('Profile photo updated!', 'success')
     } catch (err) {
       showToast('Failed to upload photo.', 'error')
+      setPreviewImage(null)
     } finally {
       setIsUploading(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
     }
   }
 
@@ -128,13 +137,16 @@ export default function ProfilePage() {
                 accept="image/jpeg, image/png, image/webp" 
                 style={{ display: 'none' }} 
               />
-              {user?.profile_image_path ? (
+              {previewImage || (user?.profile_image_path && !imageError) ? (
                 <div className="avatar-image-container">
                   <img 
-                    src={getImageUrl(user.profile_image_path)} 
+                    src={previewImage || getImageUrl(user.profile_image_path)} 
                     alt="Profile" 
                     className="avatar-image"
                     style={{ opacity: isUploading ? 0.5 : 1 }}
+                    onError={() => {
+                      if (!previewImage) setImageError(true)
+                    }}
                   />
                 </div>
               ) : (

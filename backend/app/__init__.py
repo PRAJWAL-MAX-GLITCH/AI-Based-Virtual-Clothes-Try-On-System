@@ -64,6 +64,10 @@ def create_app(config_name='default'):
             raise Forbidden("Path traversal detected")
             
         if not os.path.isfile(safe_path):
+            # Check users/ directory as fallback
+            users_fallback = os.path.normpath(os.path.join(upload_root, 'users', filename))
+            if users_fallback.startswith(os.path.abspath(upload_root)) and os.path.isfile(users_fallback):
+                return send_from_directory(os.path.join(upload_root, 'users'), filename)
             raise NotFound("File not found")
             
         # 2. Authorization checks

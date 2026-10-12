@@ -13,7 +13,13 @@ export function getImageUrl(path) {
   }
 
   // Remove leading slash if present to avoid double slashes
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path
+  let cleanPath = path.startsWith('/') ? path.slice(1) : path
+
+  // If cleanPath has no directory prefix (bare filename), route to users/ folder
+  if (!cleanPath.includes('/')) {
+    cleanPath = `users/${cleanPath}`
+  }
+
   const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/v1'
 
   // The backend exposes static files via /static/<path>

@@ -16,6 +16,7 @@ def upload_user_image(current_user):
     try:
         data = validate_and_save_image(file_obj, 'users')
         data['type'] = 'user_image'
+        data['file_path'] = data['path']
         return success_response(
             message="User image uploaded successfully",
             data=data
