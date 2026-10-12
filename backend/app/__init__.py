@@ -130,5 +130,9 @@ def init_db_indexes(app):
             tryon_history.create_index([("user_id", pymongo.ASCENDING), ("created_at", pymongo.DESCENDING)])
             
             app.logger.info("Database indexes initialized.")
+
+            # Automatically ensure real-world catalog items are present in DB
+            from .services.default_catalog import ensure_default_catalog_seeded
+            ensure_default_catalog_seeded(app)
         except Exception as e:
             app.logger.error(f"Failed to initialize database indexes: {e}")

@@ -24,7 +24,6 @@ Thumbs.db
 
 # Uploaded files (keep directory structure via .gitkeep)
 uploads/users/*
-uploads/clothing/catalog/*
 uploads/clothing/user/*
 uploads/processed/users/*
 uploads/processed/clothing/*
